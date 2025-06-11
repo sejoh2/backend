@@ -3,6 +3,8 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const pool = require("../db");
+const authenticateToken = require("../middleware/auth");
+
 
 // REGISTER
 router.post("/register", async (req, res) => {
@@ -52,5 +54,11 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ msg: "Server error" });
   }
 });
+
+// PROTECTED ROUTE
+router.get("/protected", authenticateToken, (req, res) => {
+  res.json({ msg: `Hello User ${req.user.id}, you have access!` });
+});
+
 
 module.exports = router;
